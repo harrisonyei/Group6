@@ -1,4 +1,8 @@
 #include "Capture.h"
+#include "Render.h"
+#include "Encoder.h"
+#include "Decoder.h"
+
 #include <iostream>
 using namespace std;
 Capture::Capture(Render* render_, Encoder* encoder_) {

@@ -1,5 +1,7 @@
-#include "Router.h"
 #include "Controller.h"
+#include "Decoder.h"
+#include "Router.h"
+
 Router::Router(Decoder* decoder_,Controller* controller_) {
     decoder = decoder_;
     controller = controller_;

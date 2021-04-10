@@ -1,4 +1,10 @@
 #include "Controller.h"
+#include "Capture.h"
+#include "Render.h"
+#include "Encoder.h"
+#include "Decoder.h"
+#include "Router.h"
+
 void Controller::init() {
 	render = new Render();
 	decoder = new Decoder(render);

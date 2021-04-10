@@ -1,10 +1,13 @@
 #pragma once
 #include "Component.h"
-#include "Router.h"
+#include "DataType.h"
 #include <opencv2/opencv.hpp>
 extern "C" {
 #include <libavformat/avformat.h>
 };
+
+class Router;
+
 class Encoder: public Component<cv::Mat> {
 public:
     Encoder(Router*);

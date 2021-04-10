@@ -1,4 +1,6 @@
 ﻿#include "Encoder.h"
+#include "Router.h"
+
 #include <iostream>
 using namespace std;
 Encoder::Encoder(Router* router_) {

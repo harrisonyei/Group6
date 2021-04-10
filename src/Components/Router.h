@@ -1,9 +1,11 @@
 #pragma once
 #include "Component.h"
-#include "Decoder.h"
 #include <vector>
 #include <Winsock2.h>
+
 class Controller;
+class Decoder;
+
 class Router: public Component<H264> {
 public:
     Router(Decoder*, Controller*);

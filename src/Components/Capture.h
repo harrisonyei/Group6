@@ -1,8 +1,10 @@
 #pragma once
 #include "Component.h"
-#include "Render.h"
-#include "Encoder.h"
 #include <opencv2/opencv.hpp>
+
+class Render;
+class Encoder;
+
 class Capture: public Component<int> {
 public:
 	Capture(Render*, Encoder*);
