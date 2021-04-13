@@ -2,7 +2,9 @@
 #include"Controller.h"
 class Application {
 public:
+	Application();
+	~Application();
 	void start();
 private:
-	Controller controller;
+	static Controller* controller;
 };

@@ -1,9 +1,24 @@
 #include "Application.h"
 #include <iostream>
 #include <string>
+
+#include <opencv2/opencv.hpp>
+
 using namespace std;
+Controller* Application::controller = nullptr;
+
+Application::Application()
+{
+	controller = new Controller();
+	controller->init();
+}
+Application::~Application()
+{
+	controller->leave();
+	delete controller;
+}
+
 void Application::start() {
-	controller.init();
 	string cmd, ip;
 	int port, outPort;
 	cout << "command: ";
@@ -11,7 +26,7 @@ void Application::start() {
 		if (cmd == "live") {
 			cout << "port: ";
 			cin >> port;
-			controller.live(port);
+			controller->live(port);
 		}
 		else if (cmd == "watch") {
 			cout << "ip: ";
@@ -20,10 +35,10 @@ void Application::start() {
 			cin >> port;
 			cout << "out port: ";
 			cin >> outPort;
-			controller.watch(ip, port, outPort);
+			controller->watch(ip, port, outPort);
 		}
 		else if (cmd == "leave") {
-			controller.leave();
+			controller->leave();
 		}
 		else {
 			cout << "command not found.\n";

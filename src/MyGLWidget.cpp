@@ -1,15 +1,25 @@
 #include "MyGLWidget.h"
-
+#include <iostream>
 #include <opencv2\imgproc.hpp>
+
+std::queue<cv::Mat> MyGLWidget::textureQueue = std::queue<cv::Mat>();
 
 MyGLWidget::MyGLWidget(QWidget *parent)
 	: QOpenGLWidget(parent)
 {
+	connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
+	timer.start(10);
 }
 
 MyGLWidget::~MyGLWidget()
 {
 }
+
+void MyGLWidget::pushTexture(cv::Mat mat)
+{
+	MyGLWidget::textureQueue.push(mat);
+}
+
 
 void MyGLWidget::initializeGL()
 {
@@ -30,7 +40,7 @@ void MyGLWidget::paintGL()
 	float w = width();
 	float h = height();
 
-	glViewport(0, 0, width(), height());
+	glViewport(0, 0, w, h);
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -50,26 +60,34 @@ void MyGLWidget::paintGL()
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	// transfer cvMat to glImg
-	cv::Mat frame(100, 100, CV_8UC3, cv::Scalar(0, 0, 255));
-	unsigned char* image = cvMat2glImg(frame);
-
-	int width = frame.cols;
-	int height = frame.rows;
-
-	if (image)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	if (!MyGLWidget::textureQueue.empty()) {
+		lastFrame = MyGLWidget::textureQueue.front();
+		MyGLWidget::textureQueue.pop();
+		cv::cvtColor(lastFrame, lastFrame, cv::COLOR_RGB2BGR);
 	}
 
-	glScalef(50, 50, 1);
-	glBegin(GL_QUADS); {
+	if (!lastFrame.empty()) {
+		//cv::Mat frame(100, 100, CV_8UC3, cv::Scalar(0, 0, 255));
+		unsigned char* image = lastFrame.data;
 
-	glTexCoord2f(0, 0); glVertex2d(-1, -1);
-	glTexCoord2f(0, 1); glVertex2d(-1, 1);
-	glTexCoord2f(1, 1); glVertex2d(1, 1);
-	glTexCoord2f(1, 0); glVertex2d(1, -1);
+		int width = lastFrame.cols;
+		int height = lastFrame.rows;
 
-	} glEnd();
+		if (image)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		}
+		float scale = std::min(w / (float)width, h / (float)height);
+		glScalef(width * scale, height * scale, 1);
+		glBegin(GL_QUADS); {
+
+			glTexCoord2f(0, 1); glVertex2d(-1, -1);
+			glTexCoord2f(0, 0); glVertex2d(-1, 1);
+			glTexCoord2f(1, 0); glVertex2d(1, 1);
+			glTexCoord2f(1, 1); glVertex2d(1, -1);
+
+		} glEnd();
+	}
 
 	// bind vao
 	
@@ -82,10 +100,4 @@ void MyGLWidget::paintGL()
 
 void MyGLWidget::resizeGL(int width, int height)
 {
-}
-
-unsigned char * MyGLWidget::cvMat2glImg(cv::Mat & const mat)
-{
-	cv::cvtColor(mat, mat, cv::COLOR_RGB2BGR);
-	return mat.data;
 }

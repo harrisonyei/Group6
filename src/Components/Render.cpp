@@ -1,4 +1,6 @@
 #include "Render.h"
+#include "MyGLWidget.h"
+
 void Render::start() {
 	srand(time(NULL));
 	name = to_string(rand());
@@ -9,8 +11,10 @@ bool Render::wait() {
 void Render::process() {
 	cv::Mat frame;
 	frame = getData();
-	cv::imshow(name, frame);
-	cv::waitKey(1);
+	MyGLWidget::pushTexture(frame);
+
+	//cv::imshow(name, frame);
+	//cv::waitKey(10);
 }
 void Render::end() {
 	while (getSize()) {

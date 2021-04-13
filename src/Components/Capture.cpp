@@ -10,7 +10,8 @@ Capture::Capture(Render* render_, Encoder* encoder_) {
 	encoder = encoder_;
 }
 void Capture::start() {
-	videoCapture = cv::VideoCapture(0);
+	videoCapture.open(0);
+	//videoCapture = cv::VideoCapture(0);
 }
 bool Capture::wait() {
 	return false;
