@@ -11,8 +11,7 @@ public:
 	MyGLWidget(QWidget *parent);
 	~MyGLWidget();
 
-	static std::queue<cv::Mat> textureQueue;
-	static void pushTexture(cv::Mat mat);
+	void setTexture(cv::Mat mat);
 	 
 protected:
 	void initializeGL();
@@ -20,7 +19,6 @@ protected:
 	void resizeGL(int width, int height);
 	
 private:
-
 	cv::Mat lastFrame;
 	QTimer timer;
 	GLuint textureID;

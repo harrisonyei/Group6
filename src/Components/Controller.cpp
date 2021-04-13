@@ -5,8 +5,8 @@
 #include "Decoder.h"
 #include "Router.h"
 
-void Controller::init() {
-	render = new Render();
+void Controller::init(MyGLWidget* glWidget) {
+	render = new Render(glWidget);
 	decoder = new Decoder(render);
 	router = new Router(decoder, this);
 	encoder = new Encoder(router);

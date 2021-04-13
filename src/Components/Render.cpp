@@ -1,5 +1,8 @@
 #include "Render.h"
-#include "MyGLWidget.h"
+
+Render::Render(MyGLWidget* glWidget)
+{
+}
 
 void Render::start() {
 	srand(time(NULL));
@@ -11,7 +14,8 @@ bool Render::wait() {
 void Render::process() {
 	cv::Mat frame;
 	frame = getData();
-	MyGLWidget::pushTexture(frame);
+
+	glWidget->setTexture(frame);
 
 	//cv::imshow(name, frame);
 	//cv::waitKey(10);

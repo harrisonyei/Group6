@@ -2,8 +2,6 @@
 #include <iostream>
 #include <opencv2\imgproc.hpp>
 
-std::queue<cv::Mat> MyGLWidget::textureQueue = std::queue<cv::Mat>();
-
 MyGLWidget::MyGLWidget(QWidget *parent)
 	: QOpenGLWidget(parent)
 {
@@ -15,9 +13,11 @@ MyGLWidget::~MyGLWidget()
 {
 }
 
-void MyGLWidget::pushTexture(cv::Mat mat)
+void MyGLWidget::setTexture(cv::Mat mat)
 {
-	MyGLWidget::textureQueue.push(mat);
+	lastFrame = mat;
+	cv::cvtColor(lastFrame, lastFrame, cv::COLOR_RGB2BGR);
+	update();
 }
 
 
@@ -58,13 +58,6 @@ void MyGLWidget::paintGL()
 
 	// bind texture
 	glBindTexture(GL_TEXTURE_2D, textureID);
-
-	// transfer cvMat to glImg
-	if (!MyGLWidget::textureQueue.empty()) {
-		lastFrame = MyGLWidget::textureQueue.front();
-		MyGLWidget::textureQueue.pop();
-		cv::cvtColor(lastFrame, lastFrame, cv::COLOR_RGB2BGR);
-	}
 
 	if (!lastFrame.empty()) {
 		//cv::Mat frame(100, 100, CV_8UC3, cv::Scalar(0, 0, 255));
