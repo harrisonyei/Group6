@@ -28,54 +28,68 @@
 StreamMainWindow::StreamMainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+	// setup UIs of the widget.
     ui.setupUi(this);
+
+	// Allocate a stream controller, then initialize it with the widget to be updated.
 	streamController = new Controller();
 	streamController->init(ui.DisplayGLWidget);
 }
 
 StreamMainWindow::~StreamMainWindow()
 {
+	// stops stream
 	streamController->leave();
 	delete streamController;
 }
 
 void StreamMainWindow::onStartButtonClicked()
 {
+	// handle start-button clicked event.
 	std::cout << "start!\n";
+
+	// read input from GUI.
+	// port to stream
 	std::stringstream ss;
 	ss << ui.stream_port_line->text().toStdString();
-
-	std::cout << ui.stream_port_line->text().toStdString() << std::endl;
 	int port;
 	ss >> port;
+
+	// set controller to go live at the given port.
 	streamController->live(port);
 }
 
 void StreamMainWindow::onLeaveButtonClicked()
 {
+	// handle leave-button clicked event.
 	std::cout << "leave!\n";
+	// leave / stop current stream
 	streamController->leave();
 }
 
 void StreamMainWindow::onWatchButtonClicked()
 {
+	// handle watch-button clicked event.
 	std::cout << "watch!\n";
 
+	// read input from GUI
 	std::stringstream ss;
+	// remote ip address to watch stream
 	std::string ip;
 	ss << ui.ip_adress_line->text().toStdString();
 	ss >> ip;
 	ss.clear();
-
+	// remote port to listen
 	int listen_port;
 	ss << ui.listen_port_line->text().toStdString();
 	ss >> listen_port;
 	ss.clear();
-
+	// port to stream
 	int stream_port;
 	ss << ui.stream_port_line->text().toStdString();
 	ss >> stream_port;
 	ss.clear();
 
+	// set controller to start watching a stream and sending received frame data to other downstream users.
 	streamController->watch(ip, listen_port, stream_port);
 }
