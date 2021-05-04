@@ -20,23 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "DisplayGLWidget.h"
+#include "DisplayGLWidget.widgetHeight"
 #include <iostream>
 #include <opencv2\imgproc.hpp>
 
 DisplayGLWidget::DisplayGLWidget(QWidget *parent)
 	: QOpenGLWidget(parent)
 {
-	// add timer to automatically update window.
-	// connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
-	// timer.start(10);
+
 }
 
 DisplayGLWidget::~DisplayGLWidget()
 {
 }
 
-void DisplayGLWidget::setTexture(cv::Mat mat)
+void DisplayGLWidget::setTexture(const cv::Mat& mat)
 {
 	// assign matrix data to last store frame.
 	lastFrame = mat;
@@ -62,10 +60,11 @@ void DisplayGLWidget::initializeGL()
 
 void DisplayGLWidget::paintGL()
 {
-	float w = width();
-	float h = height();
+	const float widgetWidth = width();
+	const float widgetHeight = height();
+
 	// set viewport size.
-	glViewport(0, 0, w, h);
+	glViewport(0, 0, widgetWidth, widgetHeight);
 	// clear buffers.
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -73,7 +72,7 @@ void DisplayGLWidget::paintGL()
 	// set projection.
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-w, w, -h, h, -10, 10);
+	glOrtho(-widgetWidth, widgetWidth, -widgetHeight, widgetHeight, -10, 10);
 
 	// set modelview transformation
 	glMatrixMode(GL_MODELVIEW);
@@ -81,8 +80,9 @@ void DisplayGLWidget::paintGL()
 
 	glEnable(GL_TEXTURE_2D);
 
+	// [TODO] using shader to draw
 	// bind shader
-	//this->commom_shader->Use();
+	// this->commom_shader->Use();
 
 	// bind texture
 	glBindTexture(GL_TEXTURE_2D, textureID);
@@ -90,20 +90,20 @@ void DisplayGLWidget::paintGL()
 	// if frame data is not empty
 	if (!lastFrame.empty()) {
 		//cv::Mat frame(100, 100, CV_8UC3, cv::Scalar(0, 0, 255));
-		int width = lastFrame.cols;
-		int height = lastFrame.rows;
+		const int imgWidth = lastFrame.cols;
+		const int imgHeight = lastFrame.rows;
 
-		unsigned char* image = lastFrame.data;
+		const unsigned char* image = lastFrame.data;
 		// if data is not nullptr
 		if (image)
 		{
 			// wrtie texture data from given image data.
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 		}
 
 		// scale to fit screen
-		float scale = std::min(w / (float)width, h / (float)height);
-		glScalef(width * scale, height * scale, 1);
+		float scale = std::min(widgetWidth / (float)imgWidth, widgetHeight / (float)imgHeight);
+		glScalef(imgWidth * scale, imgHeight * scale, 1);
 		// draw a quad with the given display-texture.
 		glBegin(GL_QUADS); {
 			glTexCoord2f(0, 1); glVertex2d(-1, -1);
@@ -114,16 +114,15 @@ void DisplayGLWidget::paintGL()
 		} glEnd();
 	}
 
+	// [TODO] using shader to draw
 	// bind vao
-	
 	// draw elements
 
 	// done. unbind
-
 	glDisable(GL_TEXTURE_2D);
 }
 
 void DisplayGLWidget::resizeGL(int width, int height)
 {
-	//[will handle resized event]
+	// [TODO] handle resized event
 }

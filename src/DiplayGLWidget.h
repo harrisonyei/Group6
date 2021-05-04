@@ -45,7 +45,7 @@ public:
 
 	// Sets current texture from given mat data.
 	// @param cv::Mat mat
-	void setTexture(cv::Mat mat);
+	void setTexture(const cv::Mat& mat);
 	 
 protected:
 	// Callback function when GLWidget initialized.
