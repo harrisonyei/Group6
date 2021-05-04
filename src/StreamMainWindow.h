@@ -34,13 +34,12 @@ class Controller;
 class StreamMainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
 	// Constructor
 	// @param QWidet* parent
 	// Constructs a qtwidget under the parent qtwidget.
 	// Creates a stream contoller, then initializes it.
-    StreamMainWindow(QWidget *parent = Q_NULLPTR);
+	StreamMainWindow(QWidget *parent = Q_NULLPTR);
 
 	// Descturctor
 	// Sets stream controller to stop the stream, then delete the controller.
@@ -61,12 +60,12 @@ public slots:
 	void onWatchButtonClicked();
 
 private:
-
 	// UI configurations of this window.
-    Ui::StreamMainWindowClass ui;
+	Ui::StreamMainWindowClass ui;
 
 	// Controller that controls states of streaming components.
 	Controller* streamController;
+
 };
 
 #endif // STREAM_MAINWINDOW_WINDOW_H_

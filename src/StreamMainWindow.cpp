@@ -21,15 +21,17 @@
 // SOFTWARE.
 
 #include "StreamMainWindow.h"
-#include "Components\Controller.h"
+#include "Components/Controller.h"
 
 #include <sstream>
 #include <iostream>
+#include <regex>
+
 StreamMainWindow::StreamMainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 	// setup UIs of the widget.
-    ui.setupUi(this);
+	ui.setupUi(this);
 
 	// Allocate a stream controller, then initialize it with the widget to be updated.
 	streamController = new Controller();
@@ -52,7 +54,7 @@ void StreamMainWindow::onStartButtonClicked()
 	// port to stream
 	std::stringstream ss;
 	ss << ui.stream_port_line->text().toStdString();
-	int port;
+	uint16_t port;
 	ss >> port;
 
 	// set controller to go live at the given port.
@@ -79,13 +81,24 @@ void StreamMainWindow::onWatchButtonClicked()
 	ss << ui.ip_adress_line->text().toStdString();
 	ss >> ip;
 	ss.clear();
+
+	// Regex expression for validating IPv4
+	std::regex ipv4("(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
+	// Checking if it is a valid IPv4 addresses
+    if (!regex_match(ip, ipv4)){
+		// invalid ip address
+		std::cout << "Invalid ip address." << std::endl;
+		return;
+	}
+
 	// remote port to listen
-	int listen_port;
+	uint16_t listen_port;
 	ss << ui.listen_port_line->text().toStdString();
 	ss >> listen_port;
 	ss.clear();
+
 	// port to stream
-	int stream_port;
+	uint16_t stream_port;
 	ss << ui.stream_port_line->text().toStdString();
 	ss >> stream_port;
 	ss.clear();
