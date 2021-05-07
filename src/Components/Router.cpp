@@ -1,6 +1,7 @@
 #include "Controller.h"
 #include "Decoder.h"
 #include "Router.h"
+#include "Component.hpp"
 
 Router::Router(Decoder* decoder_,Controller* controller_) {
     decoder = decoder_;
@@ -8,13 +9,13 @@ Router::Router(Decoder* decoder_,Controller* controller_) {
     living = true;
     WSAData wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData)) {
-        cout << "WSAStartup failed.\n";
+        std::cout << "WSAStartup failed.\n";
     }
 }
 bool Router::setPort(int port) {
     entry = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
     if (entry < 0) {
-        cout << "create socket failed.\n";
+        std::cout << "create socket failed.\n";
         return false;
     }
     SOCKADDR_IN addr;
@@ -22,16 +23,16 @@ bool Router::setPort(int port) {
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
     addr.sin_port = htons(port);
     if (::bind(entry, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
-        cout << "bind Socket failed.\n";
+        std::cout << "bind Socket failed.\n";
         closesocket(entry);
         return false;
     }
     return true;
 }
-bool Router::link(string ip, int port,int outPort) {
+bool Router::link(std::string ip, int port,int outPort) {
     upStream = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
     if (upStream < 0) {
-        cout << "create socket failed.\n";
+        std::cout << "create socket failed.\n";
         return false;
     }
     SOCKADDR_IN addr;
@@ -39,7 +40,7 @@ bool Router::link(string ip, int port,int outPort) {
     addr.sin_addr.s_addr = inet_addr(ip.c_str());
     addr.sin_port = htons(port);
     if (connect(upStream, (const sockaddr*)&addr, sizeof(addr)) < 0) {
-        cout << "connect error.\n";
+        std::cout << "connect error.\n";
         closesocket(upStream);
         return false;
     }
@@ -47,9 +48,9 @@ bool Router::link(string ip, int port,int outPort) {
     return setPort(outPort);
 }
 void Router::start() {
-    lock_guard<mutex> lock(vecMtx);
+    std::lock_guard<std::mutex> lock(vecMtx);
     downStream.clear();
-    thread t(&Router::server, this);
+    std::thread t(&Router::server, this);
     t.detach();
 }
 bool Router::wait() {
@@ -57,10 +58,10 @@ bool Router::wait() {
         return getSize() == 0;
     }
     else {
-        H264 h264;
-        if (recv(upStream, (char*)&h264.size, sizeof(h264.size), MSG_WAITALL)) {
-            h264.data = new uint8_t[h264.size];
-            if (recv(upStream, (char*)h264.data, h264.size, MSG_WAITALL)) {
+        std::shared_ptr<H264> h264(new H264());
+        if (recv(upStream, (char*)&(h264->size), sizeof(h264->size), MSG_WAITALL)) {
+            h264->data = new uint8_t[h264->size];
+            if (recv(upStream, (char*)h264->data, h264->size, MSG_WAITALL)) {
                 pushData(h264);
             }
             else {
@@ -74,20 +75,20 @@ bool Router::wait() {
     }
 }
 void Router::process() {
-    lock_guard<mutex> lock(vecMtx);
-    H264 h264;
+    std::lock_guard<std::mutex> lock(vecMtx);
+    std::shared_ptr<H264> h264(new H264());
     if (getSize()) {
         h264 = getData();
         char* buffer;
-        buffer = new char[sizeof(h264.size) + h264.size];
-        memcpy(buffer, &h264.size, sizeof(h264.size));
-        memcpy(buffer + sizeof(h264.size), h264.data, h264.size);
+        buffer = new char[sizeof(h264->size) + h264->size];
+        memcpy(buffer, &(h264->size), sizeof(h264->size));
+        memcpy(buffer + sizeof(h264->size), h264->data, h264->size);
         int i = 0, bytes;
         while (i < downStream.size()) {
-            bytes = send(downStream[i], buffer, sizeof(h264.size) + h264.size, 0);
+            bytes = send(downStream[i], buffer, sizeof(h264->size) + h264->size, 0);
             if (bytes < 0) {
                 downStream.erase(downStream.begin() + i);
-                cout << "socket: " << downStream[i] << " disconnect.\n";
+                std::cout << "socket: " << downStream[i] << " disconnect.\n";
             }
             else {
                 i++;
@@ -97,7 +98,7 @@ void Router::process() {
     }
 }
 void Router::end() {
-    lock_guard<mutex> lock(vecMtx);
+    std::lock_guard<std::mutex> lock(vecMtx);
     living = true;
     closesocket(upStream);
     closesocket(entry);
@@ -119,6 +120,6 @@ void Router::server() {
         vecMtx.lock();
         downStream.push_back(down);
         vecMtx.unlock();
-        cout << inet_ntoa(addr.sin_addr) << " connect." << endl;
+        std::cout << inet_ntoa(addr.sin_addr) << " connect." << std::endl;
     }
 }

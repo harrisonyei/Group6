@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "DataType.h"
 #include <vector>
 #include <Winsock2.h>
 
@@ -10,7 +11,7 @@ class Router: public Component<H264> {
 public:
     Router(Decoder*, Controller*);
     bool setPort(int);
-    bool link(string, int, int);
+    bool link(std::string, int, int);
 protected:
     void start();
     bool wait();
@@ -19,9 +20,9 @@ protected:
 private:
     Decoder* decoder;
     Controller* controller;
-    atomic_bool living;
+    std::atomic_bool living;
     SOCKET upStream, entry;
-    vector<SOCKET> downStream;
-    mutex vecMtx;
+    std::vector<SOCKET> downStream;
+    std::mutex vecMtx;
     void server();
 };
