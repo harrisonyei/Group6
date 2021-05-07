@@ -4,11 +4,11 @@
 #include <queue>
 #include <opencv2/opencv.hpp>
 
-class MyGLWidget;
+class DisplayGLWidget;
 
-class Render: public stream::Component<cv::Mat> {
+class Render: public Component<cv::Mat> {
 public:
-	Render(MyGLWidget*);
+	Render(DisplayGLWidget*);
 protected:
 	void start();
 	bool wait();
@@ -16,5 +16,5 @@ protected:
 	void end();
 private:
 	std::string name;
-	MyGLWidget* glWidget;
+	DisplayGLWidget* glWidget;
 };

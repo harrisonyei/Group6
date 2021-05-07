@@ -1,7 +1,8 @@
 #include "Render.h"
-#include "MyGLWidget.h"
+#include "Component.hpp"
+#include "DisplayGLWidget.h"
 
-Render::Render(MyGLWidget* _glWidget)
+Render::Render(DisplayGLWidget* _glWidget)
 {
 	glWidget = _glWidget;
 }
@@ -17,11 +18,13 @@ void Render::process() {
 	std::shared_ptr<cv::Mat> frame;
 	frame = getData();
 
-	if(glWidget != nullptr)
-		glWidget->setTexture(frame);
-
-	//cv::imshow(name, frame);
-	//cv::waitKey(10);
+	if (frame != nullptr) {
+		if (glWidget != nullptr)
+			glWidget->setTexture(*frame);
+		// DEBUG
+		cv::imshow(name, *frame);
+		cv::waitKey(10);
+	}
 }
 void Render::end() {
 	while (getSize()) {
