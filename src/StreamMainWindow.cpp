@@ -35,7 +35,7 @@ StreamMainWindow::StreamMainWindow(QWidget *parent)
 
 	// Allocate a stream controller, then initialize it with the widget to be updated.
 	streamController = new Controller();
-	streamController->init(ui.DisplayGLWidget);
+	streamController->init(ui.displayGLWidget);
 }
 
 StreamMainWindow::~StreamMainWindow()
