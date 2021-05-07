@@ -1,10 +1,12 @@
 ﻿#include "Decoder.h"
+#include "Component.hpp"
+
 Decoder::Decoder(Render* render_) {
     render = render_;
 }
 void Decoder::start() {
     if (init() < 0) {
-        cout << "decoder init failed.\n";
+        std::cout << "decoder init failed.\n";
         stop();
     }
 }
@@ -12,14 +14,14 @@ bool Decoder::wait() {
     return getSize() == 0;
 }
 void Decoder::process() {
-    shared_ptr<cv::Mat> frame = make_shared<cv::Mat>();
-    shared_ptr<H264> h264;
+    std::shared_ptr<cv::Mat> frame = std::make_shared<cv::Mat>();
+    std::shared_ptr<H264> h264;
     h264 = getData();
     if (decode(h264->data, h264->size, *frame) == 0) {
         render->receive(frame);
     }
     else {
-        cout << "decode failed.\n";
+        std::cout << "decode failed.\n";
     }
 }
 void Decoder::end() {
