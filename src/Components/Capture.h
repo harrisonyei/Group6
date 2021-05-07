@@ -17,5 +17,5 @@ private:
 	Render* render;
 	Encoder* encoder;
 	cv::VideoCapture videoCapture;
-	string name;
+	std::string name;
 };

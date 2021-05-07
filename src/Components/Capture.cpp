@@ -2,26 +2,28 @@
 #include "Render.h"
 #include "Encoder.h"
 #include "Decoder.h"
+#include "Component.hpp"
 
 #include <iostream>
+
+
 using namespace std;
-Capture::Capture(Render* render_, Encoder* encoder_) {
+Capture::Capture(Render* render_, Encoder* encoder_) : Component() {
 	render = render_;
 	encoder = encoder_;
 }
 void Capture::start() {
 	videoCapture.open(0);
-	//videoCapture = cv::VideoCapture(0);
 }
 bool Capture::wait() {
 	return false;
 }
 void Capture::process() {
-	cv::Mat frame;
-	videoCapture >> frame;
-	if (!frame.empty()) {
-		render->receive(frame);
-		encoder->receive(frame);
+	std::shared_ptr<cv::Mat> framePtr(new cv::Mat());
+	videoCapture >> (*framePtr);
+	if (!framePtr->empty()) {
+		render->receive(framePtr);
+		encoder->receive(framePtr);
 	}
 }
 void Capture::end() {
