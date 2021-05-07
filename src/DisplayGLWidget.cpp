@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "DisplayGLWidget.widgetHeight"
+#include "DisplayGLWidget.h"
 #include <iostream>
-#include <opencv2\imgproc.hpp>
+#include <opencv2/imgproc.hpp>
 
 DisplayGLWidget::DisplayGLWidget(QWidget *parent)
 	: QOpenGLWidget(parent)

@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifdef DISPLAY_GLWIDGET_H_
+#ifndef DISPLAY_GLWIDGET_H_
 #define DISPLAY_GLWIDGET_H_
 
 #include <QOpenGLWidget>
 #include <Qtimer>
-#include <opencv2\core.hpp>
+#include <opencv2/core.hpp>
 #include <queue>
 
 // A QtGLWidget that displays a texture on widget.
