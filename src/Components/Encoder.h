@@ -19,6 +19,6 @@ private:
     AVFrame* avFrame;
     AVPacket* avPacket;
     int frameIndex;
-    int init(EncodeConfig);
+    int init(struct EncodeConfig);
     AVPacket* encode(const cv::Mat&);
 };
