@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-project(TwitchWindow VERSION 1.0.0 LANGUAGES CXX)
+project(StreamWindow VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,6 +22,7 @@ set(SRC_COMPONENTS
     ${SRC_DIR}Components/Application.h
     ${SRC_DIR}Components/Application.cpp
     ${SRC_DIR}Components/Component.h
+    ${SRC_DIR}Components/Component.hpp
     ${SRC_DIR}Components/Capture.h
     ${SRC_DIR}Components/Capture.cpp
     ${SRC_DIR}Components/Controller.h
@@ -43,31 +44,31 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 add_Definitions("-D_XKEYCHECK_H")
 add_Definitions("-D_USE_MATH_DEFINES")
 
-add_executable(TwitchWindow
+add_executable(StreamWindow
     ${SRC_DIR}main.cpp
 
-    ${SRC_DIR}TwitchWindow.ui
-    ${SRC_DIR}TwitchWindow.qrc
+    ${SRC_DIR}StreamMainWindow.ui
+    ${SRC_DIR}StreamMainWindow.qrc
 
-    ${SRC_DIR}TwitchWindow.h
-    ${SRC_DIR}TwitchWindow.cpp
+    ${SRC_DIR}StreamMainWindow.h
+    ${SRC_DIR}StreamMainWindow.cpp
 
-    ${SRC_DIR}MyGLWidget.h
-    ${SRC_DIR}MyGLWidget.cpp
+    ${SRC_DIR}DisplayGLWidget.h
+    ${SRC_DIR}DisplayGLWidget.cpp
 
     ${SRC_COMPONENTS}
 )
 
 source_group("Components" FILES ${SRC_COMPONENTS})
 
-target_link_libraries(TwitchWindow 
+target_link_libraries(StreamWindow 
     ${OpenCV_LIBRARIES}
     ${LIBAV_LIBRARIES}
     wsock32.lib
     OpenGL32.lib
     )
 
-target_link_libraries(TwitchWindow 
+target_link_libraries(StreamWindow 
     Qt5::Core
     Qt5::Widgets
     Qt5::Gui
@@ -97,8 +98,8 @@ set(RUNTIME_DLLS
     )
 
 foreach(DLL ${RUNTIME_DLLS})
-    add_custom_command(TARGET TwitchWindow POST_BUILD
+    add_custom_command(TARGET StreamWindow POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy
 			${DLL}
-			$<TARGET_FILE_DIR:TwitchWindow>)
+			$<TARGET_FILE_DIR:StreamWindow>)
 endforeach(DLL $RUNTIME_DLLS) 
