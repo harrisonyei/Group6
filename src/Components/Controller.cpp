@@ -4,14 +4,15 @@
 #include "Encoder.h"
 #include "Decoder.h"
 #include "Router.h"
+#include "Component.hpp"
 
-void Controller::init(MyGLWidget* glWidget) {
+void Controller::init(DisplayGLWidget* glWidget) {
 	render = new Render(glWidget);
 	decoder = new Decoder(render);
 	router = new Router(decoder, this);
 	encoder = new Encoder(router);
 	capture = new Capture(render, encoder);
-	
+
 	// make sure initializing state
 	router->stop();
 	render->stop();
@@ -20,9 +21,9 @@ void Controller::init(MyGLWidget* glWidget) {
 	capture->stop();
 }
 void Controller::live(int port) {
-	cout << "try live" << ":" << port << std::endl;
+	std::cout << "try live" << ":" << port << std::endl;
 	if (router->setPort(port)) {
-		cout << "start live." << std::endl;
+		std::cout << "start live." << std::endl;
 		decoder->stop();
 		router->run();
 		encoder->run();
@@ -30,10 +31,10 @@ void Controller::live(int port) {
 		capture->run();
 	}
 }
-void Controller::watch(string ip, int port, int outPort) {
-	cout << "try watch " << ip << ":" << port << " , stream :" << outPort << std::endl;
+void Controller::watch(std::string ip, int port, int outPort) {
+	std::cout << "try watch " << ip << ":" << port << " , stream :" << outPort << std::endl;
 	if (router->link(ip, port, outPort)) {
-		cout << "start watch." << std::endl;
+		std::cout << "start watch." << std::endl;
 		capture->stop();
 		encoder->stop();
 		decoder->run();
@@ -42,7 +43,7 @@ void Controller::watch(string ip, int port, int outPort) {
 	}
 }
 void Controller::leave() {
-	cout << "leave.\n";
+	std::cout << "leave.\n";
 	router->stop();
 	render->stop();
 	decoder->stop();

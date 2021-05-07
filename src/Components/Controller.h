@@ -5,11 +5,11 @@ class Decoder;
 class Router;
 class Encoder;
 class Capture;
-class MyGLWidget;
+class DisplayGLWidget;
 
 class Controller {
 public:
-	void init(MyGLWidget*);
+	void init(DisplayGLWidget*);
 	void live(int);
 	void watch(std::string, int, int);
 	void leave();
