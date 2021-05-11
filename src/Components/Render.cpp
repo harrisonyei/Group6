@@ -1,5 +1,4 @@
 #include "Render.h"
-#include "Component.hpp"
 #include "DisplayGLWidget.h"
 
 Render::Render(DisplayGLWidget* _glWidget)
