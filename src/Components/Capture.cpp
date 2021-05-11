@@ -2,7 +2,6 @@
 #include "Render.h"
 #include "Encoder.h"
 #include "Decoder.h"
-#include "Component.hpp"
 
 #include <iostream>
 

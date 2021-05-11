@@ -1,5 +1,7 @@
 #pragma once
+
 #include "Component.h"
+
 #include <opencv2/opencv.hpp>
 
 class Render;
