@@ -4,7 +4,6 @@
 #include "Encoder.h"
 #include "Decoder.h"
 #include "Router.h"
-#include "Component.hpp"
 
 void Controller::init(DisplayGLWidget* glWidget) {
 	render = new Render(glWidget);
