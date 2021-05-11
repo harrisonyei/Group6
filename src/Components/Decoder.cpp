@@ -1,5 +1,4 @@
 ﻿#include "Decoder.h"
-#include "Component.hpp"
 
 Decoder::Decoder(Render* render_) {
     render = render_;
