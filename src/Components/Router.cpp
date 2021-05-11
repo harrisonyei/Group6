@@ -1,7 +1,6 @@
 #include "Controller.h"
 #include "Decoder.h"
 #include "Router.h"
-#include "Component.hpp"
 
 Router::Router(Decoder* decoder_,Controller* controller_) {
     decoder = decoder_;
