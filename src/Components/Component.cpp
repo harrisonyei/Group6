@@ -21,7 +21,15 @@
 // SOFTWARE.
 
 #include "Component.h"
+
 #include <assert.h>
+#include <opencv2/opencv.hpp>
+
+#include "DataType.h"
+
+template class Component<int>;
+template class Component<cv::Mat>;
+template class Component<H264>;
 
 template<typename queueType>
 Component<queueType>::Component() : task(nullptr) {
