@@ -19,8 +19,6 @@ set(SRC_DIR ${PROJECT_SOURCE_DIR}/src/)
 
 set(SRC_COMPONENTS
     ${SRC_DIR}Components/DataType.h
-    ${SRC_DIR}Components/Application.h
-    ${SRC_DIR}Components/Application.cpp
     ${SRC_DIR}Components/Component.h
     ${SRC_DIR}Components/Component.cpp
     ${SRC_DIR}Components/Capture.h
