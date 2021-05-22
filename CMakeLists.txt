@@ -22,7 +22,7 @@ set(SRC_COMPONENTS
     ${SRC_DIR}Components/Application.h
     ${SRC_DIR}Components/Application.cpp
     ${SRC_DIR}Components/Component.h
-    ${SRC_DIR}Components/Component.hpp
+    ${SRC_DIR}Components/Component.cpp
     ${SRC_DIR}Components/Capture.h
     ${SRC_DIR}Components/Capture.cpp
     ${SRC_DIR}Components/Controller.h
