@@ -25,18 +25,18 @@
 #include <assert.h>
 
 template<class queueType>
-stream::Component<queueType>::Component() : task(nullptr) {
+Component<queueType>::Component() : task(nullptr) {
     clearData();
 }
 
 template<class queueType>
-stream::Component<queueType>::~Component() {
+Component<queueType>::~Component() {
     assert(task == nullptr);
     clearData();
 }
 
 template<class queueType>
-void stream::Component<queueType>::receive(std::shared_ptr<queueType> input) {
+void Component<queueType>::receive(std::shared_ptr<queueType> input) {
     if (active) {
         pushData(input);
         condition.notify_all();
@@ -44,7 +44,7 @@ void stream::Component<queueType>::receive(std::shared_ptr<queueType> input) {
 }
 
 template<class queueType>
-void stream::Component<queueType>::run() {
+void Component<queueType>::run() {
     if (!active) {
         active = true;
         task = new std::thread(&Component::loop, this);
@@ -53,7 +53,7 @@ void stream::Component<queueType>::run() {
 }
 
 template<class queueType>
-void stream::Component<queueType>::stop() {
+void Component<queueType>::stop() {
     if (active) {
         active = false;
         condition.notify_all();
@@ -61,12 +61,12 @@ void stream::Component<queueType>::stop() {
 }
 
 template<class queueType>
-bool stream::Component<queueType>::isActive() {
+bool Component<queueType>::isActive() {
     return active;
 }
 
 template<class queueType>
-void stream::Component<queueType>::loop() {
+void Component<queueType>::loop() {
     start();
     while (active) {
         while (wait() && active) {
@@ -83,13 +83,13 @@ void stream::Component<queueType>::loop() {
 }
 
 template<class queueType>
-void stream::Component<queueType>::pushData(std::shared_ptr<queueType> input) {
+void Component<queueType>::pushData(std::shared_ptr<queueType> input) {
     std::lock_guard<std::mutex> lock(mtx);
     data.push_back(input);
 }
 
 template<class queueType>
-std::shared_ptr<queueType> stream::Component<queueType>::getData() {
+std::shared_ptr<queueType> Component<queueType>::getData() {
     std::lock_guard<std::mutex> lock(mtx);
     queueType ret;
     ret = data.front();
@@ -98,12 +98,12 @@ std::shared_ptr<queueType> stream::Component<queueType>::getData() {
 }
 
 template<class queueType>
-int stream::Component<queueType>::getSize() {
+int Component<queueType>::getSize() {
     std::lock_guard<std::mutex> lock(mtx);
     return data.size();
 }
 
 template<class queueType>
-void stream::Component<queueType>::clearData() {
+void Component<queueType>::clearData() {
     data.clear();
 }
