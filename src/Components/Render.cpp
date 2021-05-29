@@ -41,8 +41,8 @@ void Render::process() {
     std::shared_ptr<cv::Mat> frame;
     frame = getData();
     if (frame != nullptr) {
-        if (glWidget != nullptr) {
-            glWidget->setTexture(*frame);
+        if (gl_widget != nullptr) {
+            gl_widget->setTexture(*frame);
         }
         // DEBUG
         cv::imshow(name, *frame);

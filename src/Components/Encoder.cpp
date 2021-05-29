@@ -23,6 +23,9 @@
 #include "Encoder.h"
 
 #include <iostream>
+#include <memory>
+
+#include "DataType.h"
 
 Encoder::Encoder(Router* _router) {
     router = _router;
@@ -44,7 +47,7 @@ void Encoder::process() {
     std::shared_ptr<cv::Mat> frame;
     frame = getData();
     if (encode(*frame)) {
-        std::shared_ptr<H264> h264 = make_shared<H264>();
+        std::shared_ptr<H264> h264 = std::make_shared<H264>();
         h264->size = av_packet->size;
         h264->data = new uint8_t[h264->size];
         if (h264->data) {
