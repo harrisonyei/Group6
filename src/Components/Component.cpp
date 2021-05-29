@@ -24,6 +24,13 @@
 
 #include <assert.h>
 
+#include <opencv2/opencv.hpp>
+#include "DataType.h"
+
+template class Component<int>;
+template class Component<cv::Mat>;
+template class Component<H264>;
+
 template<class queueType>
 stream::Component<queueType>::Component() : task(nullptr) {
     clearData();
@@ -91,7 +98,7 @@ void stream::Component<queueType>::pushData(std::shared_ptr<queueType> input) {
 template<class queueType>
 std::shared_ptr<queueType> stream::Component<queueType>::getData() {
     std::lock_guard<std::mutex> lock(mtx);
-    queueType ret;
+    std::shared_ptr<queueType> ret;
     ret = data.front();
     data.pop_front();
     return ret;

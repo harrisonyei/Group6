@@ -25,7 +25,7 @@
 
 #ifdef WIN32 // windows system marco
 #include <Winsock2.h>
-typedef int socklen_t
+typedef int socklen_t;
 #else // linux system marco
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -39,6 +39,7 @@ typedef int SOCKET;
 #include <vector>
 
 #include "Component.h"
+#include "Controller.h"
 #include "DataType.h"
 
 class Controller;
@@ -66,7 +67,7 @@ public:
     Router(Decoder*, Controller*);
     // Set video streaming ontput port
     // Called before start living
-    bool setPort(int);
+    bool setPort(uint16_t);
     // Connent to streaming server and set streaming ontput port
     // Called before start watching
     bool link(std::string, int, int);
