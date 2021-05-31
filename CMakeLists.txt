@@ -50,6 +50,8 @@ set(SRC_COMPONENTS
     ${SRC_DIR}Components/Component.cpp
     ${SRC_DIR}Components/Capture.h
     ${SRC_DIR}Components/Capture.cpp
+    ${SRC_DIR}Components/ScreenCapture.h
+    ${SRC_DIR}Components/ScreenCapture.cpp
     ${SRC_DIR}Components/Controller.h
     ${SRC_DIR}Components/Controller.cpp
     ${SRC_DIR}Components/Encoder.h
