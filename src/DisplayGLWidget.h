@@ -27,7 +27,7 @@
 
 #include <opencv2/core.hpp>
 #include <QOpenGLWidget>
-#include <Qtimer>
+#include <qtimer.h>
 
 // A QtGLWidget that displays a texture on widget.
 // Displays current frame that are sent/recived by stream controller.
