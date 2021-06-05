@@ -51,7 +51,5 @@ void Render::process() {
 }
 
 void Render::end() {
-    while (getSize()) {
-        getData();
-    }
+    clearData();
 }

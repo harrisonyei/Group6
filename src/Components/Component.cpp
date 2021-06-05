@@ -32,7 +32,7 @@ template class Component<cv::Mat>;
 template class Component<H264>;
 
 template<class queueType>
-Component<queueType>::Component() : task(nullptr) {
+Component<queueType>::Component() : active(false), task(nullptr) {
     clearData();
 }
 
