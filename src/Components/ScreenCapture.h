@@ -25,15 +25,15 @@
 
 #include "Component.h"
 
-#include <windows.h>
-
 #include <opencv2/opencv.hpp>
+
+#include <QtWidgets>
 
 class Encoder;
 class Render;
 
 // A base class to get cv::Mat.
-// The default is to read from the windows handler.
+// The default is to read from the screen handler.
 // Example:
 // ScreenCapture* scr_cap = new ScreenCapture(render, encoder);
 // // start living
@@ -47,7 +47,7 @@ public:
     ScreenCapture(Render*, Encoder*);
 protected:
     // Override component function
-    // Setup windows screen capture variables
+    // Setup window screen capture variables
     void start();
     // Override component function
     // Return false
@@ -56,7 +56,6 @@ protected:
     // Get cv::Mat to shared_ptr and send to render and encoder if it is not enpty
     void process();
     // Override component function
-    // Release cached windows variables
     void end();
 private:
     // Setup window configurations and context, and create bitmap for copying screen content.
@@ -70,32 +69,16 @@ private:
     Render* render;
     // Encoder component pointer
     Encoder* encoder;
-private:
-    struct WNDConfig{
-        int x; // screen x position
-        int y; // screen y position
-        int w; // screen width
-        int h; // screen height
-    };
-    // Window configuration
-    WNDConfig window_config;
-    // Monitor configuration
-    WNDConfig monitor_config;
-    // Window handle
-    HWND hwnd;
-    // Device context
-    HDC hwindowDC;
-    // Compatible device context for bitmap
-    HDC hwindowCompatibleDC;
-    // Bitmap for storing screen content 
-    HBITMAP bitmap;
-    // Bitmap header which defines configurations of bitmap
-    BITMAPINFOHEADER bitmap_info;
 
+private:
+    // screen handler
+    QScreen* screen;
+    // store scaled pixelmap of the screen
+    QPixmap screen_pixmap;
+    // store captured image 
+    QImage screen_image;
     // output image width
     int img_width;
-    // output image height
-    int img_height;
 };
 
 #endif // STREAM_SCREEN_CAPTURE_H_

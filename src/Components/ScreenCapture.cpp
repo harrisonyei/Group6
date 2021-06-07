@@ -30,12 +30,8 @@ ScreenCapture::ScreenCapture(Render* render_, Encoder* encoder_) : Component() {
     render = render_;
     encoder = encoder_;
     // initialize
-    hwnd = NULL;
-    hwindowDC = NULL;
-    hwindowCompatibleDC = NULL;
-    bitmap = NULL;
-    // assign image width
-    img_width = 1080;
+    screen = nullptr;
+    img_width = 800;
 }
 
 void ScreenCapture::start() {
@@ -49,7 +45,7 @@ bool ScreenCapture::wait() {
 void ScreenCapture::process() {
     std::shared_ptr<cv::Mat> framePtr(new cv::Mat());
     // capture image
-    (*framePtr) = captureScreenMat(hwnd);
+    (*framePtr) = captureScreenMat();
     // send to renderer and encoder
     if (!framePtr->empty()) {
         render->receive(framePtr);
@@ -62,86 +58,23 @@ void ScreenCapture::end() {
 }
 
 void ScreenCapture::setupWindow(){
-    hwnd = GetDesktopWindow();
-    if(!hwnd){
-        return;
-    }
-    // get handles to a device context (DC)
-    hwindowDC = GetDC(hwnd);
-    if(!hwindowDC){
-        return;
-    }
-    hwindowCompatibleDC = CreateCompatibleDC(hwindowDC);
-    if(!hwindowCompatibleDC){
-        return;
-    }
-    SetStretchBltMode(hwindowCompatibleDC, COLORONCOLOR);
-    // get window configuration
-    window_config.x = GetSystemMetrics(SM_XVIRTUALSCREEN);
-    window_config.y = GetSystemMetrics(SM_YVIRTUALSCREEN);
-    window_config.w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
-    window_config.h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-
-    HMONITOR monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-    MONITORINFO info;
-    info.cbSize = sizeof(MONITORINFO);
-    GetMonitorInfo(monitor, &info);
-
-    monitor_config.x = info.rcMonitor.left;
-    monitor_config.y = info.rcMonitor.top;
-    monitor_config.w = info.rcMonitor.right - info.rcMonitor.left;
-    monitor_config.h = info.rcMonitor.bottom - info.rcMonitor.top;
-
-    // calculate image height accoring to given width
-    // img_width = 1080;
-    img_height = img_width * (monitor_config.h / (float)monitor_config.w);
-
-    // create a bitmap
-    bitmap = CreateCompatibleBitmap(hwindowDC, img_width, img_height);
-    if(!bitmap){
-        return;
-    }
-    // create a bitmap header
-    bitmap_info.biSize = sizeof(BITMAPINFOHEADER);
-    bitmap_info.biWidth = img_width;
-    bitmap_info.biHeight = -img_height;  //this is the line that makes it draw upside down or not
-    bitmap_info.biPlanes = 1;
-    bitmap_info.biBitCount = 32;
-    bitmap_info.biCompression = BI_RGB;
-    bitmap_info.biSizeImage = 0;
-    bitmap_info.biXPelsPerMeter = 0;
-    bitmap_info.biYPelsPerMeter = 0;
-    bitmap_info.biClrUsed = 0;
-    bitmap_info.biClrImportant = 0;
+    screen = QGuiApplication::primaryScreen();
 }
 
 void ScreenCapture::releaseWindow(){
-    if(bitmap){
-        DeleteObject(bitmap);
-    }
-    if(hwindowCompatibleDC){
-        DeleteDC(hwindowCompatibleDC);
-    }
-    if(hwnd){
-        ReleaseDC(hwnd, hwindowDC);
-    }
+    screen = nullptr;
 }
 
 cv::Mat ScreenCapture::captureScreenMat()
 {
-    if(!hwnd || !hwindowDC || !hwindowCompatibleDC || !bitmap){
-        return;
-    }
-	// create mat object
-    cv::Mat src;
-    src.create(img_height, img_width, CV_8UC4);
-    // use the previously created device context with the bitmap
-    SelectObject(hwindowCompatibleDC, bitmap);
-    // copy from the window device context to the bitmap device context
-    StretchBlt(hwindowCompatibleDC, 0, 0, img_width, img_height,
-        hwindowDC, monitor_config.x, monitor_config.y, monitor_config.w, monitor_config.h, SRCCOPY);
-    //copy from hwindowCompatibleDC to bitmap
-    GetDIBits(hwindowCompatibleDC, bitmap, 0, img_height, src.data,
-        (BITMAPINFO*)&bitmap_info, DIB_RGB_COLORS);
-    return src;
+    if (!screen)
+		return cv::Mat();
+
+	screen_pixmap = screen->grabWindow(0).scaledToWidth(img_width);
+    
+	screen_image = screen_pixmap.toImage().convertToFormat(QImage::Format::Format_BGR888);
+
+	cv::Mat mat(screen_image.height(), screen_image.width(), CV_8UC3, (cv::Scalar*)screen_image.scanLine(0));
+
+    return mat;
 }
