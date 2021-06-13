@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -27,54 +27,44 @@
 #include "Render.h"
 
 ScreenCapture::ScreenCapture(Render* render_, Encoder* encoder_) : Component() {
-    render = render_;
-    encoder = encoder_;
-    // initialize
-    screen = nullptr;
-    img_width = 800;
+  render = render_;
+  encoder = encoder_;
+  // initialize
+  screen = nullptr;
+  img_width = 800;
 }
 
-void ScreenCapture::start() {
-    setupWindow();
-}
+void ScreenCapture::start() { setupWindow(); }
 
-bool ScreenCapture::wait() {
-    return false;
-}
+bool ScreenCapture::wait() { return false; }
 
 void ScreenCapture::process() {
-    std::shared_ptr<cv::Mat> framePtr(new cv::Mat());
-    // capture image
-    (*framePtr) = captureScreenMat();
-    // send to renderer and encoder
-    if (!framePtr->empty()) {
-        render->receive(framePtr);
-        encoder->receive(framePtr);
-    }
+  std::shared_ptr<cv::Mat> framePtr(new cv::Mat());
+  // capture image
+  (*framePtr) = captureScreenMat();
+  // send to renderer and encoder
+  if (!framePtr->empty()) {
+    render->receive(framePtr);
+    encoder->receive(framePtr);
+  }
 }
 
-void ScreenCapture::end() {
-    releaseWindow();
-}
+void ScreenCapture::end() { releaseWindow(); }
 
-void ScreenCapture::setupWindow(){
-    screen = QGuiApplication::primaryScreen();
-}
+void ScreenCapture::setupWindow() { screen = QGuiApplication::primaryScreen(); }
 
-void ScreenCapture::releaseWindow(){
-    screen = nullptr;
-}
+void ScreenCapture::releaseWindow() { screen = nullptr; }
 
-cv::Mat ScreenCapture::captureScreenMat()
-{
-    if (!screen)
-		return cv::Mat();
+cv::Mat ScreenCapture::captureScreenMat() {
+  if (!screen) return cv::Mat();
 
-	screen_pixmap = screen->grabWindow(0).scaledToWidth(img_width);
-    
-	screen_image = screen_pixmap.toImage().convertToFormat(QImage::Format::Format_BGR888);
+  screen_pixmap = screen->grabWindow(0).scaledToWidth(img_width);
 
-	cv::Mat mat(screen_image.height(), screen_image.width(), CV_8UC3, (cv::Scalar*)screen_image.scanLine(0));
+  screen_image =
+      screen_pixmap.toImage().convertToFormat(QImage::Format::Format_BGR888);
 
-    return mat;
+  cv::Mat mat(screen_image.height(), screen_image.width(), CV_8UC3,
+              (cv::Scalar*)screen_image.scanLine(0));
+
+  return mat;
 }
