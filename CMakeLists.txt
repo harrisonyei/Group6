@@ -9,12 +9,28 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
 find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(LibAV REQUIRED)
+find_package(Threads REQUIRED)
+
+IF (WIN32)
+    find_package(LibAV REQUIRED)
+ELSE (WIN32)
+    find_path(LIBAV_INCLUDE_DIR libavformat/avformat.h REQUIRED)
+    find_library(AVFORMAT_LIBRARIES avformat REQUIRED)
+    find_library(AVCODEC_LIBRARIES avcodec REQUIRED)
+    find_library(AVUTIL_LIBRARIES avutil REQUIRED)
+    set(LIBAV_LIBRARIES
+        ${AVCODEC_LIBRARIES}
+        ${AVFORMAT_LIBRARIES}
+        ${AVUTIL_LIBRARIES}
+    )
+ENDIF (WIN32)
 
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src/)
 
@@ -71,6 +87,7 @@ target_link_libraries(StreamWindow
     Qt5::Widgets
     Qt5::Gui
     Qt5::OpenGL
+    Threads::Threads
     )
 
 IF (WIN32)
@@ -104,5 +121,7 @@ IF (WIN32)
             COMMAND ${CMAKE_COMMAND} -E copy
             ${DLL}
             $<TARGET_FILE_DIR:StreamWindow>)
-    endforeach(DLL $RUNTIME_DLLS) 
+    endforeach(DLL $RUNTIME_DLLS)
+ELSE (WIN32)
+    target_compile_options(StreamWindow PUBLIC "-pthread")
 ENDIF (WIN32)
