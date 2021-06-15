@@ -34,6 +34,16 @@ ENDIF (WIN32)
 
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src/)
 
+set(SRC_GUI
+    ${SRC_DIR}GUI/StreamMainWindow.qrc
+    ${SRC_DIR}GUI/StreamMainWindow.h
+    ${SRC_DIR}GUI/StreamMainWindow.cpp
+    ${SRC_DIR}GUI/StreamMainWindow_ui.h
+    ${SRC_DIR}GUI/StreamMainWindow_ui.cpp
+    ${SRC_DIR}GUI/DisplayGLWidget.h
+    ${SRC_DIR}GUI/DisplayGLWidget.cpp
+    )
+
 set(SRC_COMPONENTS
     ${SRC_DIR}Components/DataType.h
     ${SRC_DIR}Components/Component.h
@@ -53,6 +63,7 @@ set(SRC_COMPONENTS
     )
 
 include_directories(${SRC_DIR})
+include_directories(${SRC_GUI})
 include_directories(${LIBAV_INCLUDE_DIR})
 include_directories(${OpenCV_INCLUDE_DIRS})
 
@@ -61,19 +72,11 @@ add_Definitions("-D_USE_MATH_DEFINES")
 
 add_executable(StreamWindow
     ${SRC_DIR}main.cpp
-
-    ${SRC_DIR}StreamMainWindow.ui
-    ${SRC_DIR}StreamMainWindow.qrc
-
-    ${SRC_DIR}StreamMainWindow.h
-    ${SRC_DIR}StreamMainWindow.cpp
-
-    ${SRC_DIR}DisplayGLWidget.h
-    ${SRC_DIR}DisplayGLWidget.cpp
-
+    ${SRC_GUI}
     ${SRC_COMPONENTS}
 )
 
+source_group("GUI" FILES ${SRC_GUI})
 source_group("Components" FILES ${SRC_COMPONENTS})
 
 target_link_libraries(StreamWindow 
@@ -94,34 +97,34 @@ IF (WIN32)
     target_link_libraries(StreamWindow 
         wsock32.lib
     )
-    find_path(OpenCV_BIN 
-        NAMES opencv_world451.dll
-        HINTS ${OpenCV_DIR}
-        PATH_SUFFIXES x64/vc15/bin
-        REQUIRED)
+    # find_path(OpenCV_BIN 
+    #     NAMES opencv_world451.dll
+    #     HINTS ${OpenCV_DIR}
+    #     PATH_SUFFIXES x64/vc15/bin
+    #     REQUIRED)
 
-    find_path(LIBAV_BIN
-        NAMES avcodec-58.dll
-        HINTS ${LIBAV_DIR}
-        PATH_SUFFIXES bin)
+    # find_path(LIBAV_BIN
+    #     NAMES avcodec-58.dll
+    #     HINTS ${LIBAV_DIR}
+    #     PATH_SUFFIXES bin)
 
-    set(RUNTIME_DLLS
-        ${OpenCV_BIN}/opencv_world451.dll
-        ${LIBAV_BIN}/avcodec-58.dll
-        ${LIBAV_BIN}/avdevice-58.dll
-        ${LIBAV_BIN}/avfilter-7.dll
-        ${LIBAV_BIN}/avformat-58.dll
-        ${LIBAV_BIN}/avutil-56.dll
-        ${LIBAV_BIN}/postproc-55.dll
-        ${LIBAV_BIN}/swresample-3.dll
-        ${LIBAV_BIN}/swscale-5.dll)
+    # set(RUNTIME_DLLS
+    #     ${OpenCV_BIN}/opencv_world451.dll
+    #     ${LIBAV_BIN}/avcodec-58.dll
+    #     ${LIBAV_BIN}/avdevice-58.dll
+    #     ${LIBAV_BIN}/avfilter-7.dll
+    #     ${LIBAV_BIN}/avformat-58.dll
+    #     ${LIBAV_BIN}/avutil-56.dll
+    #     ${LIBAV_BIN}/postproc-55.dll
+    #     ${LIBAV_BIN}/swresample-3.dll
+    #     ${LIBAV_BIN}/swscale-5.dll)
 
-    foreach(DLL ${RUNTIME_DLLS})
-        add_custom_command(TARGET StreamWindow POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            ${DLL}
-            $<TARGET_FILE_DIR:StreamWindow>)
-    endforeach(DLL $RUNTIME_DLLS)
+    # foreach(DLL ${RUNTIME_DLLS})
+    #     add_custom_command(TARGET StreamWindow POST_BUILD
+    #         COMMAND ${CMAKE_COMMAND} -E copy
+    #         ${DLL}
+    #         $<TARGET_FILE_DIR:StreamWindow>)
+    # endforeach(DLL $RUNTIME_DLLS)
 ELSE (WIN32)
     target_compile_options(StreamWindow PUBLIC "-pthread")
 ENDIF (WIN32)

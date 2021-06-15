@@ -20,11 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "StreamMainWindow.h"
-
 #include <QtWidgets/QApplication>
 
-int main(int argc, char *argv[]) {
+#include "GUI/StreamMainWindow.h"
+
+int main(int argc, char *argv[])
+{
     QApplication a(argc, argv);
     StreamMainWindow w;
     w.show();
