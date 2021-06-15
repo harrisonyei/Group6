@@ -22,7 +22,7 @@
 
 #include "Render.h"
 
-#include "DisplayGLWidget.h"
+#include "GUI/DisplayGLWidget.h"
 
 Render::Render(DisplayGLWidget* _gl_widget) {
     gl_widget = _gl_widget;
