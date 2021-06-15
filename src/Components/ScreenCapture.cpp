@@ -61,10 +61,10 @@ cv::Mat ScreenCapture::captureScreenMat() {
   screen_pixmap = screen->grabWindow(0).scaledToWidth(img_width);
 
   screen_image =
-      screen_pixmap.toImage().convertToFormat(QImage::Format::Format_BGR888);
+      screen_pixmap.toImage().convertToFormat(QImage::Format::Format_RGB888);
 
   cv::Mat mat(screen_image.height(), screen_image.width(), CV_8UC3,
               (cv::Scalar*)screen_image.scanLine(0));
-
+  cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
   return mat;
 }
