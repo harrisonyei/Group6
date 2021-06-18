@@ -67,10 +67,9 @@ set(SRC_COMPONENTS
     )
 
 set(SRC_TEST
-    ${SRC_DIR}Test/test.cpp
-    ${SRC_DIR}Components/Component.h
-    ${SRC_DIR}Components/Component.cpp
+    ${SRC_DIR}Test/GTest.cpp
     ${SRC_DIR}Test/ComponentTest.cpp
+    ${SRC_DIR}Test/CoderTest.cpp
     )
 
 include_directories(${SRC_DIR})
@@ -120,6 +119,7 @@ IF (WIN32)
 
     set(RUNTIME_DLLS
         ${OpenCV_BIN}/opencv_world451.dll
+        ${OpenCV_BIN}/opencv_videoio_ffmpeg451_64.dll
         ${LIBAV_BIN}/avcodec-58.dll
         ${LIBAV_BIN}/avdevice-58.dll
         ${LIBAV_BIN}/avfilter-7.dll
@@ -137,7 +137,10 @@ IF (WIN32)
     endforeach(DLL $RUNTIME_DLLS)
 ELSE (WIN32)
     target_compile_options(StreamWindow PUBLIC "-pthread")
-    add_executable(StreamWindowTest ${SRC_TEST})
+    add_executable(StreamWindowTest
+        ${SRC_GUI}
+        ${SRC_COMPONENTS}
+        ${SRC_TEST})
     target_link_libraries(StreamWindowTest
         ${OpenCV_LIBRARIES}
         ${OPENGL_gl_LIBRARY}
@@ -145,6 +148,17 @@ ELSE (WIN32)
         ${GTEST_LIBRARY}
         ${GTEST_MAIN_LIBRARY}
         pthread)
+    target_link_libraries(StreamWindowTest 
+        Qt5::Core
+        Qt5::Widgets
+        Qt5::Gui
+        Qt5::OpenGL
+        Threads::Threads
+    )
     enable_testing()
     add_test(NAME GTest COMMAND StreamWindowTest)
+    add_custom_command(TARGET StreamWindowTest POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${PROJECT_SOURCE_DIR}/testdata/test.gif
+            $<TARGET_FILE_DIR:StreamWindowTest>)
 ENDIF (WIN32)
