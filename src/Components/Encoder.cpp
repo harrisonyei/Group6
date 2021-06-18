@@ -26,6 +26,7 @@
 #include <memory>
 
 #include "DataType.h"
+#include "Router.h"
 
 Encoder::Encoder(Router* _router) {
     router = _router;
