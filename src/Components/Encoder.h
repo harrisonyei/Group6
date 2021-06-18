@@ -29,7 +29,8 @@ extern "C" {
 #include <opencv2/opencv.hpp>
 
 #include "Component.h"
-#include "Router.h"
+
+class Router;
 
 // A class encode cv::Mat to H264.
 // Example:
