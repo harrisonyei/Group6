@@ -68,6 +68,9 @@ set(SRC_COMPONENTS
 
 set(SRC_TEST
     ${SRC_DIR}Test/test.cpp
+    ${SRC_DIR}Components/Component.h
+    ${SRC_DIR}Components/Component.cpp
+    ${SRC_DIR}Test/ComponentTest.cpp
     )
 
 include_directories(${SRC_DIR})
