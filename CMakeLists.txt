@@ -21,6 +21,8 @@ find_package(Threads REQUIRED)
 IF (WIN32)
     find_package(LibAV REQUIRED)
 ELSE (WIN32)
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
     find_path(LIBAV_INCLUDE_DIR libavformat/avformat.h REQUIRED)
     find_library(AVFORMAT_LIBRARIES avformat REQUIRED)
     find_library(AVCODEC_LIBRARIES avcodec REQUIRED)
@@ -62,6 +64,10 @@ set(SRC_COMPONENTS
     ${SRC_DIR}Components/Render.cpp
     ${SRC_DIR}Components/Router.h
     ${SRC_DIR}Components/Router.cpp
+    )
+
+set(SRC_TEST
+    ${SRC_DIR}Test/test.cpp
     )
 
 include_directories(${SRC_DIR})
@@ -128,4 +134,14 @@ IF (WIN32)
     endforeach(DLL $RUNTIME_DLLS)
 ELSE (WIN32)
     target_compile_options(StreamWindow PUBLIC "-pthread")
+    add_executable(StreamWindowTest ${SRC_TEST})
+    target_link_libraries(StreamWindowTest
+        ${OpenCV_LIBRARIES}
+        ${OPENGL_gl_LIBRARY}
+        ${LIBAV_LIBRARIES}
+        ${GTEST_LIBRARY}
+        ${GTEST_MAIN_LIBRARY}
+        pthread)
+    enable_testing()
+    add_test(NAME GTest COMMAND StreamWindowTest)
 ENDIF (WIN32)
