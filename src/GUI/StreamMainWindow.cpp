@@ -110,3 +110,7 @@ void StreamMainWindow::onWatchButtonClicked() {
   // to other downstream users.
   stream_controller->watch(ip, listen_port, stream_port);
 }
+
+void StreamMainWindow::onSelectCaptureType(int index)
+{
+}

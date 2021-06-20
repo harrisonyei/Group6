@@ -117,6 +117,14 @@ QWidget* StreamMainWindowUI::setupButtonWidget(QWidget* parent) {
   const int text_height = 30;
   const QFont font("Arial", 18, QFont::Weight::Normal);
 
+  capture_type_combo = new QComboBox();
+  capture_type_combo->addItem("Webcam");
+  capture_type_combo->addItem("Desktop");
+  // connect select event to mainwidget.
+  main_widget->connect(capture_type_combo, SIGNAL(currentIndexChanged(int)), 
+      main_widget, SLOT(onSelectCaptureType(int)));
+  layout->addWidget(capture_type_combo);
+
   QPushButton* start_btn = new QPushButton("Start Stream");
   start_btn->setFixedHeight(text_height);
   // connect button event to mainwidget.
