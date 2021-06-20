@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -25,31 +25,31 @@
 
 // Libav encode using config
 struct EncodeConfig {
-    // video width 
-    int width = 1280 * 0.5;
-    // video height
-    int height = 720 * 0.5;
-    // video encode frames per second
-    int frame_rate = 30;
-    // I frame interval
-    int gop_size = 100;
-    // B frame rate
-    int max_b_frames = 0;
+  // video width
+  int width = 1280 * 0.5;
+  // video height
+  int height = 720 * 0.5;
+  // video encode frames per second
+  int frame_rate = 30;
+  // I frame interval
+  int gop_size = 100;
+  // B frame rate
+  int max_b_frames = 0;
 };
 
 // After encode packet
 struct H264 {
-    // Size of data bytes
-    int size;
-    // Packet data pointer
-    uint8_t* data;
-    // Destructors, auto free data
-    ~H264() {
-        if (data) {
-            delete[] data;
-        }
-        data = nullptr;
+  // Size of data bytes
+  int size;
+  // Packet data pointer
+  uint8_t *data;
+  // Destructors, auto free data
+  ~H264() {
+    if (data) {
+      delete[] data;
     }
+    data = nullptr;
+  }
 };
 
-#endif // STREAM_DATATYPE_H_
+#endif  // STREAM_DATATYPE_H_

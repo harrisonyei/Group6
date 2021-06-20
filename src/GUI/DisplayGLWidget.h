@@ -38,14 +38,14 @@ class DisplayGLWidget : public QOpenGLWidget {
   // Constructor
   // @param QWidet* parent
   // Constructs a GLWidget under the parent qtwidget.
-  DisplayGLWidget(QWidget* parent);
+  DisplayGLWidget(QWidget *parent);
 
   // Destructor
   ~DisplayGLWidget() = default;
 
   // Sets current texture from given mat data.
   // @param cv::Mat mat
-  void setTexture(const cv::Mat& mat);
+  void setTexture(const cv::Mat &mat);
 
  protected:
   // Callback function when GLWidget initialized.

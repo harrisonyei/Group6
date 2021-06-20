@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -25,92 +25,93 @@
 #include <assert.h>
 
 #include <opencv2/opencv.hpp>
+
 #include "DataType.h"
 
 template class Component<int>;
 template class Component<cv::Mat>;
 template class Component<H264>;
 
-template<class queueType>
+template <class queueType>
 Component<queueType>::Component() : active(false), task(nullptr) {
-    clearData();
+  clearData();
 }
 
-template<class queueType>
+template <class queueType>
 Component<queueType>::~Component() {
-    assert(task == nullptr);
-    clearData();
+  assert(task == nullptr);
+  clearData();
 }
 
-template<class queueType>
+template <class queueType>
 void Component<queueType>::receive(std::shared_ptr<queueType> input) {
-    if (active) {
-        pushData(input);
-        condition.notify_all();
-    }
+  if (active) {
+    pushData(input);
+    condition.notify_all();
+  }
 }
 
-template<class queueType>
+template <class queueType>
 void Component<queueType>::run() {
-    if (!active) {
-        active = true;
-        task = new std::thread(&Component::loop, this);
-        task->detach();
-    }
+  if (!active) {
+    active = true;
+    task = new std::thread(&Component::loop, this);
+    task->detach();
+  }
 }
 
-template<class queueType>
+template <class queueType>
 void Component<queueType>::stop() {
-    if (active) {
-        active = false;
-        condition.notify_all();
-    }
+  if (active) {
+    active = false;
+    condition.notify_all();
+  }
 }
 
-template<class queueType>
+template <class queueType>
 bool Component<queueType>::isActive() {
-    return active;
+  return active;
 }
 
-template<class queueType>
+template <class queueType>
 void Component<queueType>::loop() {
-    start();
-    while (active) {
-        while (wait() && active) {
-            std::unique_lock<std::mutex> lock(mtx);
-            condition.wait(lock);
-        }
-        if (active) {
-            process();
-        }
+  start();
+  while (active) {
+    while (wait() && active) {
+      std::unique_lock<std::mutex> lock(mtx);
+      condition.wait(lock);
     }
-    end();
-    delete task;
-    task = nullptr;
+    if (active) {
+      process();
+    }
+  }
+  end();
+  delete task;
+  task = nullptr;
 }
 
-template<class queueType>
+template <class queueType>
 void Component<queueType>::pushData(std::shared_ptr<queueType> input) {
-    std::lock_guard<std::mutex> lock(mtx);
-    data.push_back(input);
+  std::lock_guard<std::mutex> lock(mtx);
+  data.push_back(input);
 }
 
-template<class queueType>
+template <class queueType>
 std::shared_ptr<queueType> Component<queueType>::getData() {
-    std::lock_guard<std::mutex> lock(mtx);
-    std::shared_ptr<queueType> ret;
-    ret = data.front();
-    data.pop_front();
-    return ret;
+  std::lock_guard<std::mutex> lock(mtx);
+  std::shared_ptr<queueType> ret;
+  ret = data.front();
+  data.pop_front();
+  return ret;
 }
 
-template<class queueType>
+template <class queueType>
 int Component<queueType>::getSize() {
-    std::lock_guard<std::mutex> lock(mtx);
-    return data.size();
+  std::lock_guard<std::mutex> lock(mtx);
+  return data.size();
 }
 
-template<class queueType>
+template <class queueType>
 void Component<queueType>::clearData() {
-    data.clear();
+  data.clear();
 }

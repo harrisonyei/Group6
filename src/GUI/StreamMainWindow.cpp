@@ -111,6 +111,4 @@ void StreamMainWindow::onWatchButtonClicked() {
   stream_controller->watch(ip, listen_port, stream_port);
 }
 
-void StreamMainWindow::onSelectCaptureType(int index)
-{
-}
+void StreamMainWindow::onSelectCaptureType(int index) {}

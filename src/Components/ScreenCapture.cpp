@@ -26,7 +26,7 @@
 #include "Encoder.h"
 #include "Render.h"
 
-ScreenCapture::ScreenCapture(Render* render_, Encoder* encoder_) : Component() {
+ScreenCapture::ScreenCapture(Render *render_, Encoder *encoder_) : Component() {
   render = render_;
   encoder = encoder_;
   // initialize
@@ -64,7 +64,7 @@ cv::Mat ScreenCapture::captureScreenMat() {
       screen_pixmap.toImage().convertToFormat(QImage::Format::Format_RGB888);
 
   cv::Mat mat(screen_image.height(), screen_image.width(), CV_8UC3,
-              (cv::Scalar*)screen_image.scanLine(0));
+              (cv::Scalar *)screen_image.scanLine(0));
   cv::cvtColor(mat, mat, cv::COLOR_RGB2BGR);
   return mat;
 }
