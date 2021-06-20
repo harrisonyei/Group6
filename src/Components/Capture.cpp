@@ -42,6 +42,10 @@ bool Capture::wait() {
 void Capture::process() {
     std::shared_ptr<cv::Mat> framePtr(new cv::Mat());
     video_capture >> (*framePtr);
+
+    // images from cv::Capture are in BGR color space. Convert them to RGB instead.
+    cv::cvtColor((*framePtr), (*framePtr), cv::COLOR_BGR2RGB);
+
     if (!framePtr->empty()) {
         render->receive(framePtr);
         encoder->receive(framePtr);
