@@ -65,6 +65,6 @@ cv::Mat ScreenCapture::captureScreenMat() {
 
   cv::Mat mat(screen_image.height(), screen_image.width(), CV_8UC3,
               (cv::Scalar*)screen_image.scanLine(0));
-  cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
+  cv::cvtColor(mat, mat, cv::COLOR_RGB2BGR);
   return mat;
 }

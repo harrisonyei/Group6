@@ -30,7 +30,11 @@ class Decoder;
 class Router;
 class Encoder;
 class Capture;
+class ScreenCapture;
 class DisplayGLWidget;
+
+template<typename T> class Component;
+typedef Component<int> ICapture;
 
 // A class to control the streaming status
 // Example:
@@ -46,6 +50,13 @@ class DisplayGLWidget;
 
 class Controller {
 public:
+    enum class CaptureType
+    {
+        CAMERA = 0,
+        SCREEN
+    };
+
+public:
     // Default constructor
     Controller() = default;
     // Default destructor
@@ -58,6 +69,9 @@ public:
     void watch(std::string source_ip, int source_port, int output_port);
     // Close streaming
     void leave();
+    // Change current capture type.
+    void changeType(CaptureType type);
+
 private:
     // Render component pointer
     Render* render;
@@ -67,8 +81,14 @@ private:
     Router* router;
     // Encoder component pointer
     Encoder* encoder;
+    // Abstract Capture component pointer
+    ICapture* capture;
     // Capture component pointer
-    Capture* capture;
+    Capture* camera_capture;
+    // ScreenCapture component pointer
+    ScreenCapture* screen_capture;
+    // Current capture type
+    CaptureType capture_type;
 };
 
 #endif //STREAM_CONTROLLER_H_

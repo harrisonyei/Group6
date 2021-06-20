@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,54 +23,54 @@
 #ifndef DISPLAY_GLWIDGET_H_
 #define DISPLAY_GLWIDGET_H_
 
-#include <queue>
-
-#include <opencv2/core.hpp>
-#include <QOpenGLWidget>
 #include <qtimer.h>
+
+#include <QOpenGLWidget>
+#include <opencv2/core.hpp>
+#include <queue>
 
 // A QtGLWidget that displays a texture on widget.
 // Displays current frame that are sent/recived by stream controller.
-class DisplayGLWidget : public QOpenGLWidget
-{
-	Q_OBJECT
+class DisplayGLWidget : public QOpenGLWidget {
+  Q_OBJECT
 
-public:
-	// Constructor
-	// @param QWidet* parent
-	// Constructs a GLWidget under the parent qtwidget.
-	DisplayGLWidget(QWidget *parent);
+ public:
+  // Constructor
+  // @param QWidet* parent
+  // Constructs a GLWidget under the parent qtwidget.
+  DisplayGLWidget(QWidget* parent);
 
-	// Destructor
-	~DisplayGLWidget() = default;
+  // Destructor
+  ~DisplayGLWidget() = default;
 
-	// Sets current texture from given mat data.
-	// @param cv::Mat mat
-	void setTexture(const cv::Mat& mat);
-	 
-protected:
-	// Callback function when GLWidget initialized.
-	void initializeGL();
+  // Sets current texture from given mat data.
+  // @param cv::Mat mat
+  void setTexture(const cv::Mat& mat);
 
-	// Callback function when GLWidget is updated.
-	void paintGL();
+ protected:
+  // Callback function when GLWidget initialized.
+  void initializeGL();
 
-	// Callback function when GLWidget is resized.
-	// @param int width
-	// New width.
-	// @param int height
-	// New height.
-	void resizeGL(int width, int height);
-	
-private:
-	// Last displayed frame.
-	cv::Mat last_frame;
+  // Callback function when GLWidget is updated.
+  void paintGL();
 
-	// Timer for automatically update window.
-	QTimer timer;
+  // Callback function when GLWidget is resized.
+  // @param int width
+  // New width.
+  // @param int height
+  // New height.
+  void resizeGL(int width, int height);
 
-	// OpenGL texture id for displaying frame data.
-	GLuint texture_id;
+ private:
+  // Last displayed frame.
+  cv::Mat last_frame;
+  bool frame_updated;
+
+  // Timer for automatically update window.
+  QTimer timer;
+
+  // OpenGL texture id for displaying frame data.
+  GLuint texture_id;
 };
 
-#endif // DISPLAY_GLWIDGET_H_
+#endif  // DISPLAY_GLWIDGET_H_
