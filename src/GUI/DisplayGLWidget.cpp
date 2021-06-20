@@ -34,12 +34,14 @@ DisplayGLWidget::DisplayGLWidget(QWidget *parent)
 
 void DisplayGLWidget::setTexture(const cv::Mat& mat)
 {
-	// assign matrix data to last store frame.
-	last_frame = mat;
-	// change data format from BGR to RGB.
-	cv::cvtColor(last_frame, last_frame, cv::COLOR_RGB2BGR);
-	// set QtWidget update flag.
-	update();
+	// check cv::mat format
+	if (mat.type() == CV_8UC3)
+	{
+		// assign matrix data to last store frame.
+		last_frame = mat;
+		// set QtWidget update flag.
+		update();
+	}
 }
 
 
