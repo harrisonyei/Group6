@@ -54,6 +54,8 @@ class StreamMainWindowUI {
   QLineEdit* stream_port_line;
   QLineEdit* listen_port_line;
   QLineEdit* ip_adress_line;
+  QComboBox* capture_type_combo;
+
 };
 
 #endif  // STREAM_MAIN_WINDOW_UI_H_

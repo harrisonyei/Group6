@@ -61,6 +61,10 @@ class StreamMainWindow : public QMainWindow {
   // Starts watching a live stream that is from the given ip and port.
   void onWatchButtonClicked();
 
+  // Handles capture type changed event.
+  // Change current capturing source.
+  void onSelectCaptureType(int index);
+
  private:
   // ui management
   StreamMainWindowUI ui;
