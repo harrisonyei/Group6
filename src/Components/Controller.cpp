@@ -27,6 +27,7 @@
 #include "Encoder.h"
 #include "Render.h"
 #include "Router.h"
+#include "ScreenCapture.h"
 
 void Controller::init(DisplayGLWidget* glWidget) {
     // make a dataflow graph
@@ -36,14 +37,20 @@ void Controller::init(DisplayGLWidget* glWidget) {
     decoder = new Decoder(render);
     router = new Router(decoder, this);
     encoder = new Encoder(router);
-    capture = new Capture(render, encoder);
+    camera_capture = new Capture(render, encoder);
+    screen_capture = new ScreenCapture(render, encoder);
 
     // make sure initializing state
     router->stop();
     render->stop();
     decoder->stop();
     encoder->stop();
-    capture->stop();
+    camera_capture->stop();
+    screen_capture->stop();
+
+    // default use camera capture
+    capture_type = CaptureType::CAMERA;
+    capture = camera_capture;
 }
 
 void Controller::live(int port) {
@@ -77,4 +84,33 @@ void Controller::leave() {
     decoder->stop();
     encoder->stop();
     capture->stop();
+}
+
+void Controller::changeType(CaptureType type)
+{
+    // Return if types are the same.
+    if (capture_type == type)
+        return;
+
+    // cache for restoring running state after change capture type.
+    bool running = capture->isActive();
+    capture->stop();
+
+    switch (type)
+    {
+    case Controller::CaptureType::CAMERA:
+        capture = camera_capture;
+        break;
+    case Controller::CaptureType::SCREEN:
+        capture = screen_capture;
+        break;
+    default:
+        capture = camera_capture;
+        break;
+    }
+
+    if (running)
+    {
+        capture->run();
+    }
 }
