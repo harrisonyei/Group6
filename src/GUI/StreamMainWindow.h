@@ -41,7 +41,7 @@ class StreamMainWindow : public QMainWindow {
   // @param QWidet* parent
   // Constructs a qtwidget under the parent qtwidget.
   // Creates a stream contoller, then initializes it.
-  StreamMainWindow(QWidget* parent = Q_NULLPTR);
+  StreamMainWindow(QWidget *parent = Q_NULLPTR);
 
   // Descturctor
   // Sets stream controller to stop the stream, then delete the controller.
@@ -70,7 +70,7 @@ class StreamMainWindow : public QMainWindow {
   StreamMainWindowUI ui;
 
   // Controller that controls states of streaming components.
-  Controller* stream_controller;
+  Controller *stream_controller;
 };
 
 #endif  // STREAM_MAINWINDOW_WINDOW_H_

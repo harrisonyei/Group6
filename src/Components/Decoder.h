@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -39,37 +39,39 @@ extern "C" {
 // dec->run();
 // // stop decoding
 // dec->stop();
-class Decoder: public Component<H264> {
-public:
-    // Constructors
-    // Set render pointer
-    Decoder(Render*);
-public:
-    // Override component function
-    // Alloc avContext, avFrame and avPacket
-    void start();
-    // Override component function
-    // Return true if queue is enpty
-    bool wait();
-    // Override component function
-    // Decode H264 packet to cv::Mat and send to render
-    void process();
-    // Override component function
-    // Free avContext, avFrame, avPacket and clear queue
-    void end();
-private:
-    // Render component pointer
-    Render* render;
-    // Libav context pointer
-    AVCodecContext* av_context;
-    // Libav frame pointer
-    AVFrame* av_frame;
-    // Libav packet pointer
-    AVPacket* av_packet;
-    // Init libav pointers, called in start
-    int init();
-    // Using libav to decode H264 packet and return cv::Mat
-    int decode(uint8_t*, int, cv::Mat&);
+class Decoder : public Component<H264> {
+ public:
+  // Constructors
+  // Set render pointer
+  Decoder(Render *);
+
+ public:
+  // Override component function
+  // Alloc avContext, avFrame and avPacket
+  void start();
+  // Override component function
+  // Return true if queue is enpty
+  bool wait();
+  // Override component function
+  // Decode H264 packet to cv::Mat and send to render
+  void process();
+  // Override component function
+  // Free avContext, avFrame, avPacket and clear queue
+  void end();
+
+ private:
+  // Render component pointer
+  Render *render;
+  // Libav context pointer
+  AVCodecContext *av_context;
+  // Libav frame pointer
+  AVFrame *av_frame;
+  // Libav packet pointer
+  AVPacket *av_packet;
+  // Init libav pointers, called in start
+  int init();
+  // Using libav to decode H264 packet and return cv::Mat
+  int decode(uint8_t *, int, cv::Mat &);
 };
 
-#endif // STREAM_DECODER_H_
+#endif  // STREAM_DECODER_H_

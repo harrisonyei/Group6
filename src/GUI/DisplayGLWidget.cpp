@@ -25,11 +25,11 @@
 #include <iostream>
 #include <opencv2/imgproc.hpp>
 
-DisplayGLWidget::DisplayGLWidget(QWidget* parent) : QOpenGLWidget(parent) {
+DisplayGLWidget::DisplayGLWidget(QWidget *parent) : QOpenGLWidget(parent) {
   // construct QtWidget
 }
 
-void DisplayGLWidget::setTexture(const cv::Mat& mat) {
+void DisplayGLWidget::setTexture(const cv::Mat &mat) {
   // check cv::mat format && last frame is drawn
   if (!frame_updated && mat.type() == CV_8UC3) {
     // assign matrix data to last store frame.
@@ -87,10 +87,10 @@ void DisplayGLWidget::paintGL() {
 
   // if frame data is not empty
   if (!last_frame.empty()) {
-    const int& image_width = last_frame.cols;
-    const int& image_height = last_frame.rows;
+    const int &image_width = last_frame.cols;
+    const int &image_height = last_frame.rows;
 
-    const unsigned char* image = last_frame.data;
+    const unsigned char *image = last_frame.data;
     // if data is not nullptr and frame is updated.
     if (image) {
       // wrtie texture data from given image data.

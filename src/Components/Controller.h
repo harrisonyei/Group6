@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -33,7 +33,8 @@ class Capture;
 class ScreenCapture;
 class DisplayGLWidget;
 
-template<typename T> class Component;
+template <typename T>
+class Component;
 typedef Component<int> ICapture;
 
 // A class to control the streaming status
@@ -49,46 +50,43 @@ typedef Component<int> ICapture;
 // stream_controller->leave();
 
 class Controller {
-public:
-    enum class CaptureType
-    {
-        CAMERA = 0,
-        SCREEN
-    };
+ public:
+  enum class CaptureType { CAMERA = 0, SCREEN };
 
-public:
-    // Default constructor
-    Controller() = default;
-    // Default destructor
-    ~Controller() = default;
-    // Set display widget pointer
-    void init(DisplayGLWidget*);
-    // Start streaming to target port 
-    void live(int);
-    // Start receiving packet for source_ip:source_port and streaming to output_port
-    void watch(std::string source_ip, int source_port, int output_port);
-    // Close streaming
-    void leave();
-    // Change current capture type.
-    void changeType(CaptureType type);
+ public:
+  // Default constructor
+  Controller() = default;
+  // Default destructor
+  ~Controller() = default;
+  // Set display widget pointer
+  void init(DisplayGLWidget *);
+  // Start streaming to target port
+  void live(int);
+  // Start receiving packet for source_ip:source_port and streaming to
+  // output_port
+  void watch(std::string source_ip, int source_port, int output_port);
+  // Close streaming
+  void leave();
+  // Change current capture type.
+  void changeType(CaptureType type);
 
-private:
-    // Render component pointer
-    Render* render;
-    // Decoder component pointer
-    Decoder* decoder;
-    // Router component pointer
-    Router* router;
-    // Encoder component pointer
-    Encoder* encoder;
-    // Abstract Capture component pointer
-    ICapture* capture;
-    // Capture component pointer
-    Capture* camera_capture;
-    // ScreenCapture component pointer
-    ScreenCapture* screen_capture;
-    // Current capture type
-    CaptureType capture_type;
+ private:
+  // Render component pointer
+  Render *render;
+  // Decoder component pointer
+  Decoder *decoder;
+  // Router component pointer
+  Router *router;
+  // Encoder component pointer
+  Encoder *encoder;
+  // Abstract Capture component pointer
+  ICapture *capture;
+  // Capture component pointer
+  Capture *camera_capture;
+  // ScreenCapture component pointer
+  ScreenCapture *screen_capture;
+  // Current capture type
+  CaptureType capture_type;
 };
 
-#endif //STREAM_CONTROLLER_H_
+#endif  // STREAM_CONTROLLER_H_

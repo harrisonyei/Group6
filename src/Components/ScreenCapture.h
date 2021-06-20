@@ -43,7 +43,7 @@ class ScreenCapture : public Component<int> {
  public:
   // Constructors
   // Set render pointer and encoder pointer
-  ScreenCapture(Render*, Encoder*);
+  ScreenCapture(Render *, Encoder *);
 
  protected:
   // Override component function
@@ -68,13 +68,13 @@ class ScreenCapture : public Component<int> {
   cv::Mat captureScreenMat();
 
   // Render component pointer
-  Render* render;
+  Render *render;
   // Encoder component pointer
-  Encoder* encoder;
+  Encoder *encoder;
 
  private:
   // screen handler
-  QScreen* screen;
+  QScreen *screen;
   // store scaled pixelmap of the screen
   QPixmap screen_pixmap;
   // store captured image

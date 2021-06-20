@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -29,88 +29,86 @@
 #include "Router.h"
 #include "ScreenCapture.h"
 
-void Controller::init(DisplayGLWidget* glWidget) {
-    // make a dataflow graph
-    // capture -> encoder -> router -> decoder -> render
-    // capture -> render
-    render = new Render(glWidget);
-    decoder = new Decoder(render);
-    router = new Router(decoder, this);
-    encoder = new Encoder(router);
-    camera_capture = new Capture(render, encoder);
-    screen_capture = new ScreenCapture(render, encoder);
+void Controller::init(DisplayGLWidget *glWidget) {
+  // make a dataflow graph
+  // capture -> encoder -> router -> decoder -> render
+  // capture -> render
+  render = new Render(glWidget);
+  decoder = new Decoder(render);
+  router = new Router(decoder, this);
+  encoder = new Encoder(router);
+  camera_capture = new Capture(render, encoder);
+  screen_capture = new ScreenCapture(render, encoder);
 
-    // make sure initializing state
-    router->stop();
-    render->stop();
-    decoder->stop();
-    encoder->stop();
-    camera_capture->stop();
-    screen_capture->stop();
+  // make sure initializing state
+  router->stop();
+  render->stop();
+  decoder->stop();
+  encoder->stop();
+  camera_capture->stop();
+  screen_capture->stop();
 
-    // default use camera capture
-    capture_type = CaptureType::CAMERA;
-    capture = camera_capture;
+  // default use camera capture
+  capture_type = CaptureType::CAMERA;
+  capture = camera_capture;
 }
 
 void Controller::live(int port) {
-    std::cout << "try live" << ":" << port << std::endl;
-    if (router->setPort(port)) {
-        std::cout << "start live." << std::endl;
-        decoder->stop();
-        router->run();
-        encoder->run();
-        render->run();
-        capture->run();
-    }
+  std::cout << "try live"
+            << ":" << port << std::endl;
+  if (router->setPort(port)) {
+    std::cout << "start live." << std::endl;
+    decoder->stop();
+    router->run();
+    encoder->run();
+    render->run();
+    capture->run();
+  }
 }
 
 void Controller::watch(std::string ip, int port, int outPort) {
-    std::cout << "try watch " << ip << ":" << port << " , stream :" << outPort << std::endl;
-    if (router->link(ip, port, outPort)) {
-        std::cout << "start watch." << std::endl;
-        capture->stop();
-        encoder->stop();
-        decoder->run();
-        router->run();
-        render->run();
-    }
+  std::cout << "try watch " << ip << ":" << port << " , stream :" << outPort
+            << std::endl;
+  if (router->link(ip, port, outPort)) {
+    std::cout << "start watch." << std::endl;
+    capture->stop();
+    encoder->stop();
+    decoder->run();
+    router->run();
+    render->run();
+  }
 }
 
 void Controller::leave() {
-    std::cout << "leave.\n";
-    router->stop();
-    render->stop();
-    decoder->stop();
-    encoder->stop();
-    capture->stop();
+  std::cout << "leave.\n";
+  router->stop();
+  render->stop();
+  decoder->stop();
+  encoder->stop();
+  capture->stop();
 }
 
-void Controller::changeType(CaptureType type)
-{
-    // Return if types are the same.
-    if (capture_type == type)
-        return;
+void Controller::changeType(CaptureType type) {
+  // Return if types are the same.
+  if (capture_type == type) return;
 
-    // cache for restoring running state after change capture type.
-    bool running = capture->isActive();
-    capture->stop();
+  // cache for restoring running state after change capture type.
+  bool running = capture->isActive();
+  capture->stop();
 
-    switch (type)
-    {
+  switch (type) {
     case Controller::CaptureType::CAMERA:
-        capture = camera_capture;
-        break;
+      capture = camera_capture;
+      break;
     case Controller::CaptureType::SCREEN:
-        capture = screen_capture;
-        break;
+      capture = screen_capture;
+      break;
     default:
-        capture = camera_capture;
-        break;
-    }
+      capture = camera_capture;
+      break;
+  }
 
-    if (running)
-    {
-        capture->run();
-    }
+  if (running) {
+    capture->run();
+  }
 }

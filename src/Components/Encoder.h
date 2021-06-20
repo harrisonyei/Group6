@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -39,39 +39,41 @@ class Router;
 // enc->run();
 // // stop encoding
 // enc->stop();
-class Encoder: public Component<cv::Mat> {
-public:
-    // Constructors
-    // Set router pointer
-    Encoder(Router*);
-protected:
-    // Override component function
-    // Alloc avContext, avFrame and avPacket, set libav encoding config
-    void start();
-    // Override component function
-    // Return true if queue is enpty
-    bool wait();
-    // Override component function
-    // Encode cv::Mat to H264 packet and send to router
-    void process();
-    // Override component function
-    // Free avContext, avFrame, avPacket and clear queue
-    void end();
-private:
-    // Router component pointer
-    Router* router;
-    // Libav context pointer
-    AVCodecContext* av_context;
-    // Libav frame pointer
-    AVFrame* av_frame;
-    // Libav packet pointer
-    AVPacket* av_packet;
-    // Encode frame index counter
-    int frameIndex;
-    // Set libav encoding config and return 0 if succeeded
-    int init(struct EncodeConfig);
-    // Using libav to encode cv::Mat and return H264 packet pointer
-    AVPacket* encode(const cv::Mat&);
+class Encoder : public Component<cv::Mat> {
+ public:
+  // Constructors
+  // Set router pointer
+  Encoder(Router *);
+
+ protected:
+  // Override component function
+  // Alloc avContext, avFrame and avPacket, set libav encoding config
+  void start();
+  // Override component function
+  // Return true if queue is enpty
+  bool wait();
+  // Override component function
+  // Encode cv::Mat to H264 packet and send to router
+  void process();
+  // Override component function
+  // Free avContext, avFrame, avPacket and clear queue
+  void end();
+
+ private:
+  // Router component pointer
+  Router *router;
+  // Libav context pointer
+  AVCodecContext *av_context;
+  // Libav frame pointer
+  AVFrame *av_frame;
+  // Libav packet pointer
+  AVPacket *av_packet;
+  // Encode frame index counter
+  int frameIndex;
+  // Set libav encoding config and return 0 if succeeded
+  int init(struct EncodeConfig);
+  // Using libav to encode cv::Mat and return H264 packet pointer
+  AVPacket *encode(const cv::Mat &);
 };
 
-#endif // STREAM_ENCODER_H_
+#endif  // STREAM_ENCODER_H_

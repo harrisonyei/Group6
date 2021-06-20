@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,10 +23,11 @@
 #ifndef STREAM_RENDER_H_
 #define STREAM_RENDER_H_
 
-#include "Component.h"
 #include <mutex>
-#include <queue>
 #include <opencv2/opencv.hpp>
+#include <queue>
+
+#include "Component.h"
 
 class DisplayGLWidget;
 
@@ -37,29 +38,31 @@ class DisplayGLWidget;
 // ren->run();
 // // stop living
 // ren->stop();
-class Render: public Component<cv::Mat> {
-public:
-    // Constructors
-    // Set target window pointer
-    Render(DisplayGLWidget*);
-protected:
-    // Override component function
-    // Get random window name
-    void start();
-    // Override component function
-    // Return true if queue is enpty
-    bool wait();
-    // Override component function
-    // Show cv::Mat on target window
-    void process();
-    // Override component function
-    // Clear queue
-    void end();
-private:
-    // OpenCV window name
-    std::string name;
-    // QTgui window pointer
-    DisplayGLWidget* gl_widget;
+class Render : public Component<cv::Mat> {
+ public:
+  // Constructors
+  // Set target window pointer
+  Render(DisplayGLWidget *);
+
+ protected:
+  // Override component function
+  // Get random window name
+  void start();
+  // Override component function
+  // Return true if queue is enpty
+  bool wait();
+  // Override component function
+  // Show cv::Mat on target window
+  void process();
+  // Override component function
+  // Clear queue
+  void end();
+
+ private:
+  // OpenCV window name
+  std::string name;
+  // QTgui window pointer
+  DisplayGLWidget *gl_widget;
 };
 
-#endif // STREAM_RENDER_H_
+#endif  // STREAM_RENDER_H_

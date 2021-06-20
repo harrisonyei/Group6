@@ -32,30 +32,29 @@ class DisplayGLWidget;
 class StreamMainWindowUI {
  public:
   // setup all UIs.
-  void setupUI(StreamMainWindow* widget);
+  void setupUI(StreamMainWindow *widget);
   // setup menu items.
   void setupMenus();
   // setup widgets.
   void setupWidgets();
   // setup displayGLWidget.
-  QWidget* setupDisplayWidget(QWidget*);
+  QWidget *setupDisplayWidget(QWidget *);
   // setup input text fields.
-  QWidget* setupInputWidget(QWidget*);
+  QWidget *setupInputWidget(QWidget *);
   // setup buttons.
-  QWidget* setupButtonWidget(QWidget*);
+  QWidget *setupButtonWidget(QWidget *);
 
   // store the StreamMainWindow it handles.
-  StreamMainWindow* main_widget;
+  StreamMainWindow *main_widget;
 
   // store displayGLWidget .
-  DisplayGLWidget* display_glwidget;
+  DisplayGLWidget *display_glwidget;
 
   // store input fields.
-  QLineEdit* stream_port_line;
-  QLineEdit* listen_port_line;
-  QLineEdit* ip_adress_line;
-  QComboBox* capture_type_combo;
-
+  QLineEdit *stream_port_line;
+  QLineEdit *listen_port_line;
+  QLineEdit *ip_adress_line;
+  QComboBox *capture_type_combo;
 };
 
 #endif  // STREAM_MAIN_WINDOW_UI_H_
