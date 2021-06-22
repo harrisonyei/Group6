@@ -40,9 +40,6 @@ void Render::process() {
     if (gl_widget != nullptr) {
       gl_widget->setTexture(*frame);
     }
-    // DEBUG
-    cv::imshow(name, *frame);
-    cv::waitKey(10);
   }
 }
 
