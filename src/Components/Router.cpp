@@ -116,8 +116,8 @@ void Router::process() {
     while (i < down_stream.size()) {
       bytes = send(down_stream[i], buffer, sizeof(h264->size) + h264->size, 0);
       if (bytes < 0) {
-        down_stream.erase(down_stream.begin() + i);
         std::cout << "socket: " << down_stream[i] << " disconnect.\n";
+        down_stream.erase(down_stream.begin() + i);
       } else {
         i++;
       }
