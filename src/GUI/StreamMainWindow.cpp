@@ -111,4 +111,10 @@ void StreamMainWindow::onWatchButtonClicked() {
   stream_controller->watch(ip, listen_port, stream_port);
 }
 
-void StreamMainWindow::onSelectCaptureType(int index) {}
+void StreamMainWindow::onSelectCaptureType(int index) {
+  if (index == 0) {
+    stream_controller->changeType(Controller::CaptureType::CAMERA);
+  } else if (index == 1) {
+    stream_controller->changeType(Controller::CaptureType::SCREEN);
+  }
+}
